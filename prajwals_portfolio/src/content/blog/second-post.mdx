@@ -1,0 +1,154 @@
+---
+title: "Image Dithering - An Awesome Image Effect that's worth looking into"
+description: 'Lorem ipsum dolor sit amet'
+pubDate: 'April 30 2025'
+heroImage: '/blog-placeholder-4.jpg'
+---
+import ImagesWithCaption from '../../components/ImagesWithCaption.astro';
+
+---- Banner image: a powerful, surreal image with parts dithered in diff techniques ----
+
+One day while using X (or twitter), I came across this <a href="https://x.com/bbssppllvv/status/1835048028975112265" target="_blank">post by @bbssppllvv</a> and first came across this Dithering effect and thought it was sooo cool. 
+I was fascinated as I have been an enjoyer of Visual things — from Drawing to Design and Frontend, and thought of diving deeper into this effect. I went through wikipedia pages, dithering websites, obscure pdfs and more, and loved the vast amount of Algorithms and the different patterns that can be created.
+
+### So What is Image Dithering?
+
+Simply, It is a method to represent an image with a fewer/limited set of colors.
+It involves a process called *quantization*, which is basically rounding pixel values to their closest value in a smaller set of values.
+In addition, there are some algorithms that involve *error diffusion*, which is the process of spreading errors (difference between original and quantized pixel value) to nearby pixels.
+
+It's a way to create an illusion of smoothness with a smaller set of colors by strategically adding noise or "dots". 
+Other than being a really cool visual effect generator, there are other use cases as well.
+
+### Some Use Cases of Image Dithering
+
+It's earlier use cases were in newspapers, comic books, and other printed media, where dithering would be applied to images using just black dots (and white using absence of black). This would smoothly simulate gray shades even though printing presses only supported black ink.
+Comic books and other color printing worked similarly, but to simulate more shades of color than the limited palette printing presses had.
+<span class="subscript-note">from <a href="https://www.lifewire.com/what-is-dithering-4686105#mntl-sc-block_14-0" target="_blank">lifewire</a></span>
+
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '../../../public/dither_blog_img_6_3.png', 
+            alt: 'Grayscaled image'
+        },
+        {
+            src: '../../../public/dither_blog_img_6.png', 
+            alt: 'Dithered image simulating grayscale with black and white pixels'
+        }
+    ]} 
+>
+    <p slot="caption">
+    Original Grayscale Image (first). Dithered image (second) simulating grayscale with black and white pixels.
+    </p>
+</ImagesWithCaption>
+
+The first image above uses actual gray shades while the dithered image, which also looks grayscale, uses only black and white pixels!
+
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '../../../public/dither_blog_img_7.png', 
+            alt: 'Original Gradient image',
+            width: '300px'
+        },
+        {
+            src: '../../../public/dither_blog_img_7_6.png', 
+            alt: 'Quantized Gradient Image with 10 color values',
+            width: '300px'
+        },
+        {
+            src: '../../../public/dither_blog_img_7_7.png', 
+            alt: 'Dithered Gradient Image with 10 color values',
+            width: '300px'
+        }
+    ]} 
+>
+    <p slot="caption">
+    Original Image (first). Quantized Image with 10 color values (second) and Dithered Image with 10 color values (third).
+    </p>
+</ImagesWithCaption>
+
+Simply quantizing or mapping pixels to smaller set of colors can create unsmooth bands (middle image above), applying dither smooths it out using the same limited set of colors (right-side image)
+
+### Some Common Dithering Algos and how they work
+Let's now explore how some of these algorithms work, it's also helpful if you want to implement them yourself.
+I will focus on two main categories:
+
+#### Error Diffusion Algorithms
+
+Here, we first quantize the colors and round them to the closest value. Then we take the difference between the original and the quantized value, which is the *error* and spread it to nearby pixels. There are different algorithms to spread these errors, some examples are:
+
+##### Floyd-Steinberg Algorithm
+
+-> It traverses from left to right in the image and pushes the quant error to the neighbouring *four* pixels like shown below:
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '../../../public/dithering_blog_img_2_3.png', 
+            alt: 'the FS diffusion coefficients',
+            width: '480px'
+        }
+    ]} 
+>
+    <p slot="caption">
+    Image from <a href='https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering' target='_blank'>Wikipedia</a> | the FS diffusion coefficients
+    </p>
+</ImagesWithCaption>
+
+-> let's say we have a pixel value in RGB format with <code>R value = 207</code> and we round it to <code>255</code>, so the quant error is <code>255 - 207 = 48</code>. 
+
+<blockquote class="small-note"> We can decide what value to round off to and how many color values we want, for e.g. if we wanted n = 4 values in our dithered image - <code>0,  85, 170, 255</code>. In this case, a value of <code>207</code> will be rounded off to the closest one i.e. <code>170</code>. </blockquote>
+
+-> now according to the coefficients shown previously, the pixel to the right will be transformed to <code> newValue = oldValue + error * 7/16</code>, if the value of that pixel was <code>150</code>, it will change to <code>150 + 48 * 7/16 = 171</code>.
+
+In short, for every pixel: 
+1. round off value to closestValue.
+2. calculate error = closestValue - value.
+3. for each of the neighbours, newValue = oldValue + error * itsCorrespondingFraction.
+
+<blockquote class="small-note"> (Note: RGB values range from 0 to 255. In grayscale images, a pixel's R, G and B values are all the same, so (207, 207, 207) will convert to (255, 255, 255) which is also grayscale. On an image with a larger color scale, the R,G,B values will differ. say, for n = 4 values, it'll lead to more than just 4 colors) </blockquote>
+
+---- original image and image showing example of FS algo ----
+
+##### Atkinson Algorithm
+Atkinson dithering is a variant of Floyd–Steinberg dithering designed by Bill Atkinson at Apple Computer, and used in the original Macintosh computer. 
+It pushes the quant error to neighbouring *six* pixels like shown below:
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '../../../public/dither_blog_img_8_2.png', 
+            alt: 'the Atkinson diffusion coefficients',
+            width: '480px'
+        }
+    ]} 
+>
+    <p slot="caption">
+    Image from <a href='https://en.wikipedia.org/wiki/Atkinson_dithering' target='_blank'>Wikipedia</a> | the Atkinson diffusion coefficients
+    </p>
+</ImagesWithCaption>
+
+Unlike Floyd–Steinberg dithering, only 3⁄4 of the error is diffused outward. This leads to a more localized dither, at the cost of lower performance on near-white and near-black areas, but the increase in contrast on those areas may be regarded as more visually desirable for some purposes. 
+
+---- original image and image showing example of Atkinson algo ----
+
+#### Non-Error Diffusion Algorithms
+One of the main type of algorithms here are *ordered* algorithms.
+You apply a fixed, repeating pattern (an “order”) to decide how to threshold each pixel. Here, we usually have just *two* colors (two each for R,G, and B) and round off the pixels based on if it's greater or smaller than a dynamic threshold. Examples:
+
+##### Bayer Ordered Algorithm
+
+
+Bayer (reference to a lost pdf), Halftone, more obscure ones
+
+blah blah...
+
+After some initial exploration, I started playing around by implementing a basic version of Floyd-Steinberg and Atkinson algos on codepen.io and thus began my journey of understanding some of them and building <a href="https://ditherplay.vercel.app" target="_blank">Ditherplay</a>
+
+
+blah blah...
+
