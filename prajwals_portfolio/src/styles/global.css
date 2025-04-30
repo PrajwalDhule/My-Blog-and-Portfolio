@@ -101,6 +101,7 @@ p {
 .prose > p,
 .prose > ul,
 .prose > ol,
+.prose > code.code-block,
 .prose > div:not(:has(.image-grid)),
 .prose > blockquote{
 	/* width: 60%; */
@@ -116,13 +117,16 @@ p {
 	margin-bottom: 2em;
 }
 .prose div.image-grid{
-	width: min(1080px, 100%);
+	width: min(1300px, 100%);
 }
 .prose > p:has(+ ol){
 	margin-bottom: 0;
 }
 .prose > ol{
 	margin-bottom: 3em;
+}
+code.code-block > pre{
+	width: min(720px, 100%);
 }
 textarea {
 	width: 100%;
@@ -144,8 +148,24 @@ code {
 	background-color: rgb(var(--gray-dark));
 	border-radius: 2px;
 }
+code.code-block {
+	display: block;
+	font-family: monospace;
+	white-space-collapse: preserve;
+	text-wrap-mode: nowrap;
+	margin: 1em;
+	margin-right: 0px;
+	padding: 0 1em;
+	background-color: #24292e;
+	color: #e1e4e8;
+	overflow-x: auto;
+	text-align: left;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	border-radius: 8px;
+}
 pre {
-	padding: 1.5em;
+	/* padding: 1.5em; */
 	border-radius: 8px;
 }
 pre > code {

@@ -30,11 +30,11 @@ Comic books and other color printing worked similarly, but to simulate more shad
 <ImagesWithCaption 
     images={[
         {
-            src: '../../../public/dither_blog_img_6_3.png', 
+            src: '/dither_blog_img_6_3.png', 
             alt: 'Grayscaled image'
         },
         {
-            src: '../../../public/dither_blog_img_6.png', 
+            src: '/dither_blog_img_6.png', 
             alt: 'Dithered image simulating grayscale with black and white pixels'
         }
     ]} 
@@ -50,17 +50,17 @@ The first image above uses actual gray shades while the dithered image, which al
 <ImagesWithCaption 
     images={[
         {
-            src: '../../../public/dither_blog_img_7.png', 
+            src: '/dither_blog_img_7.png', 
             alt: 'Original Gradient image',
             width: '300px'
         },
         {
-            src: '../../../public/dither_blog_img_7_6.png', 
+            src: '/dither_blog_img_7_6.png', 
             alt: 'Quantized Gradient Image with 10 color values',
             width: '300px'
         },
         {
-            src: '../../../public/dither_blog_img_7_7.png', 
+            src: '/dither_blog_img_7_7.png', 
             alt: 'Dithered Gradient Image with 10 color values',
             width: '300px'
         }
@@ -79,7 +79,7 @@ I will focus on two main categories:
 
 #### Error Diffusion Algorithms
 
-Here, we first quantize the colors and round them to the closest value. Then we take the difference between the original and the quantized value, which is the *error* and spread it to nearby pixels. There are different algorithms to spread these errors, some examples are:
+Here, we first quantize the colors and round them to the closest value. Then we take the difference between the original and the quantized value, which is the *error* and spread it to nearby pixels. There are different algorithms to spread these errors, let's go through some of them:
 
 ##### Floyd-Steinberg Algorithm
 
@@ -88,7 +88,7 @@ Here, we first quantize the colors and round them to the closest value. Then we 
 <ImagesWithCaption 
     images={[
         {
-            src: '../../../public/dithering_blog_img_2_3.png', 
+            src: '/dithering_blog_img_2_3.png', 
             alt: 'the FS diffusion coefficients',
             width: '480px'
         }
@@ -106,22 +106,49 @@ Here, we first quantize the colors and round them to the closest value. Then we 
 -> now according to the coefficients shown previously, the pixel to the right will be transformed to <code> newValue = oldValue + error * 7/16</code>, if the value of that pixel was <code>150</code>, it will change to <code>150 + 48 * 7/16 = 171</code>.
 
 In short, for every pixel: 
-1. round off value to closestValue.
-2. calculate error = closestValue - value.
-3. for each of the neighbours, newValue = oldValue + error * itsCorrespondingFraction.
+1. round off value to <code>closestValue</code>.
+2. calculate <code>error = closestValue - value</code>.
+3. for each of the neighbours, <code>newValue = oldValue + error * itsCorrespondingFraction</code>.
 
-<blockquote class="small-note"> (Note: RGB values range from 0 to 255. In grayscale images, a pixel's R, G and B values are all the same, so (207, 207, 207) will convert to (255, 255, 255) which is also grayscale. On an image with a larger color scale, the R,G,B values will differ. say, for n = 4 values, it'll lead to more than just 4 colors) </blockquote>
+<blockquote class="small-note"> Note: <code>RGB values range from 0 to 255</code>. In grayscale images, a pixel's R, G and B values are all the same, so (207, 207, 207) will convert to (255, 255, 255) which is also grayscale. <br/>
+It means for <code>n = 2</code> possible values, <code>0 and 255</code>: <br/>
+For a grayscale image -> 2 (or n) possible outputs i.e. (0, 0, 0) or (255, 255, 255). <br/>
+For a non-grayscale image -> more than 2 (or n) possible outputs e.g. (255, 255, 0), (255, 0, 255), (0, 255, 0), (255, 255, 255) and so on. </blockquote>
 
----- original image and image showing example of FS algo ----
-
-##### Atkinson Algorithm
-Atkinson dithering is a variant of Floyd–Steinberg dithering designed by Bill Atkinson at Apple Computer, and used in the original Macintosh computer. 
-It pushes the quant error to neighbouring *six* pixels like shown below:
+<blockquote class="small-note">Also, note that whenever I mention "value" I am referring to one of R/G/B values, which is also referred to as *brightness*.</blockquote>
 
 <ImagesWithCaption 
     images={[
         {
-            src: '../../../public/dither_blog_img_8_2.png', 
+            src: '/dither_blog_img_base.jpg', 
+            alt: 'Original Image',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_floyd_2.png', 
+            alt: 'Original Colors and Dithered with Floyd-Steinberg',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_floyd_1.png', 
+            alt: 'Grayscaled and Dithered with Floyd-Steinberg',
+            width: '360px'
+        }        
+    ]} 
+>
+    <p slot="caption">
+    Original Image (first). Dithered with Floyd-Steinberg(second), and Grayscaled + Dithered with Floyd-Steinberg (third).
+    </p>
+</ImagesWithCaption>
+
+##### Atkinson Algorithm
+Atkinson dithering is a variant of Floyd–Steinberg dithering designed by Bill Atkinson at Apple Computer, and used in the original Macintosh computer. 
+It pushes the quant error to neighbouring <code>six</code> pixels like shown below:
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '/dither_blog_img_8_2.png', 
             alt: 'the Atkinson diffusion coefficients',
             width: '480px'
         }
@@ -132,18 +159,108 @@ It pushes the quant error to neighbouring *six* pixels like shown below:
     </p>
 </ImagesWithCaption>
 
-Unlike Floyd–Steinberg dithering, only 3⁄4 of the error is diffused outward. This leads to a more localized dither, at the cost of lower performance on near-white and near-black areas, but the increase in contrast on those areas may be regarded as more visually desirable for some purposes. 
+Unlike Floyd–Steinberg dithering, only 3⁄4 of the error is diffused outward. This leads to a more localized dither, at the cost of lower performance on near-white and near-black areas, but the increase in contrast on those areas may be regarded as more visually desirable for some purposes. <span class="subscript-note">from <a href="https://en.wikipedia.org/wiki/Atkinson_dithering" target="_blank">Wikipedia</a></span>
 
----- original image and image showing example of Atkinson algo ----
+<ImagesWithCaption 
+    images={[
+        {
+            src: '/dither_blog_img_base.jpg', 
+            alt: 'Original Image',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_atkinson_2.png', 
+            alt: 'Original Colors and Dithered with Atkinson Algorithm',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_atkinson_1.png', 
+            alt: 'Grayscaled and Dithered with Atkinson Algorithm',
+            width: '360px'
+        }        
+    ]} 
+>
+    <p slot="caption">
+    Original Image (first). Dithered with Atkinson Algorithm(second), and Grayscaled + Dithered with Atkinson Algorithm (third).
+    </p>
+</ImagesWithCaption>
 
 #### Non-Error Diffusion Algorithms
 One of the main type of algorithms here are *ordered* algorithms.
 You apply a fixed, repeating pattern (an “order”) to decide how to threshold each pixel. Here, we usually have just *two* colors (two each for R,G, and B) and round off the pixels based on if it's greater or smaller than a dynamic threshold. Examples:
 
 ##### Bayer Ordered Algorithm
+Ordered algorithms usually utilize a threshold matrix to create a repeating pixelated, grid-like patterns.
+Think of it as starting with a matrix of values and repeating it across the entire image, like floor tiles.
 
+--- maybe an image ---
 
-Bayer (reference to a lost pdf), Halftone, more obscure ones
+<code class="code-block">
+```
+// 4 x 4 threshold matrix
+
+const thresholdMat = [
+    [  0,  8,  2, 10 ],
+    [ 12,  4, 14,  6 ],
+    [  3, 11,  1,  9 ],
+    [ 15,  7, 13,  5 ]
+  ];
+```
+</code>
+
+-> A matrix is defined, which is usually a square matrix with <code>N x N</code> dimensions and values from <code>0 to N * N - 1</code>. This matrix is also called *Bayer matrix* when N is a power of 2.
+
+-> While traversing each pixel, we can get the corresponding matrix value by taking <code>modulo</code> of the pixel indices (x and y) <code>w.r.t. N</code>.
+
+-> Once we get the value, we <code>divide by N*N</code> to get a value between 0 and 1 and <code>multiply it with 255</code>. 
+
+---- formula image with mention of + 0.5 ----
+
+-> Now we have a *threshold* value to which we compare the original pixel value and decide to turn the pixel *on or off* 
+
+-> For e.g. if the threshold is 127.5 and the pixel value is 130, we can turn it "on" (since 130 > 127.5) by setting it to a value like 255. Thus, ordered dithering usually only has two output color values unlike error diffusion algorithms.
+
+<ImagesWithCaption 
+    images={[
+        {
+            src: '/dither_blog_img_base.jpg', 
+            alt: 'Original Image',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_bayer_2.png', 
+            alt: 'Original Colors and Dithered with Bayer',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_bayer_1.png', 
+            alt: 'Grayscaled and Dithered with Bayer ',
+            width: '360px'
+        }        
+    ]} 
+>
+    <p slot="caption">
+    Original Image (first). Dithered with Bayer(second), and Grayscaled + Dithered with Bayer (third).
+    </p>
+</ImagesWithCaption>
+
+##### Halftone
+This algorithm doesn't use a matrix, but can still be termed as an ordered algorithm since it generates similar, repeating patterns — circles.
+
+-> To create a basic halftone effect, we can take a grid or cell of size N similar to Bayer, but instead of comparing pixels to some matrix, we just convert it to grayscale and take it's value (or brightness).
+
+-> For the current cell of N x N pixels, we take the average of those N*N values in a cell to get the average brightness of the cell.
+
+-> we then calculate the radius of the dot/circle to create using <br/>
+   <code>radius = ((255 - avg) / 255) * cellRadius</code>.
+
+-> Now, for each pixel outside of this radius w.r.t. the center of the cell, we turn it off, or make it 255 i.e. white, else black i.e. 0.
+
+-> the end result is a black circle at the center of the cell. The resulting image will be made of such circles of different sizes. 
+
+---- original image and image showing example of Halftone algo ----
+
+more obscure ones
 
 blah blah...
 
