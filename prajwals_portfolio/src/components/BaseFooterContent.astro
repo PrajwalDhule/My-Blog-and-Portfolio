@@ -1,0 +1,41 @@
+---
+const today = new Date();
+---
+
+<p class="copy">
+    <div class="social-links"> 
+        <span>&copy; {today.getFullYear()} <a href="http://localhost:4321/blog">Prajwal's Blog</a></span>
+        ·
+        <a href="https://x.com/prajwaldhule36" target="_blank">
+            X / Twitter
+        </a>
+        <a href="https://linkedin.com/in/prajwal-dhule" target="_blank">
+            Linkedin
+        </a>
+        <a href="https://github.com/PrajwalDhule" target="_blank">
+            Github
+        </a>
+        · 
+        <span>hello.prajwal247@gmail.com</span>
+    </div>
+</p>
+
+<style>
+    footer {
+        padding: 2em 1em 6em 1em;
+        text-align: center;
+    }
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+        margin-top: 1em;
+    }
+    .social-links a {
+        text-decoration: none;
+        color: rgb(var(--gray));
+    }
+    .social-links a:hover {
+        color: rgb(var(--gray-light));
+    }
+</style>

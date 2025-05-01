@@ -1,12 +1,10 @@
 ---
-title: "Image Dithering - An Awesome Image Effect that's worth looking into"
-description: 'Lorem ipsum dolor sit amet'
-pubDate: 'April 30 2025'
-heroImage: '/blog-placeholder-4.jpg'
+title: "The Art of Image Dithering - A Unique Visual Effect Worth Trying Out"
+description: ''
+pubDate: 'May 2 2025'
+heroImage: '/dither_blog_thumbnail_6.png'
 ---
 import ImagesWithCaption from '../../components/ImagesWithCaption.astro';
-
----- Banner image: a powerful, surreal image with parts dithered in diff techniques ----
 
 One day while using X (or twitter), I came across this <a href="https://x.com/bbssppllvv/status/1835048028975112265" target="_blank">post by @bbssppllvv</a> and first came across this Dithering effect and thought it was sooo cool. 
 I was fascinated as I have been an enjoyer of Visual things — from Drawing to Design and Frontend, and thought of diving deeper into this effect. I went through wikipedia pages, dithering websites, obscure pdfs and more, and loved the vast amount of Algorithms and the different patterns that can be created.
@@ -30,39 +28,38 @@ Comic books and other color printing worked similarly, but to simulate more shad
 <ImagesWithCaption 
     images={[
         {
-            src: '/dither_blog_img_6_3.png', 
+            src: '/dither_blog_img_9_2.png', 
             alt: 'Grayscaled image'
         },
         {
-            src: '/dither_blog_img_6.png', 
+            src: '/dither_blog_img_9_1.png', 
             alt: 'Dithered image simulating grayscale with black and white pixels'
         }
     ]} 
 >
     <p slot="caption">
-    Original Grayscale Image (first). Dithered image (second) simulating grayscale with black and white pixels.
+        Original Grayscale Image from <a href="https://www.pexels.com/photo/close-up-photography-of-sleeping-tabby-cat-1056251/" target="_blank">Pexels</a> (first), Dithered image (second) simulating grayscale with black & white pixels.
     </p>
 </ImagesWithCaption>
 
 The first image above uses actual gray shades while the dithered image, which also looks grayscale, uses only black and white pixels!
-
 
 <ImagesWithCaption 
     images={[
         {
             src: '/dither_blog_img_7.png', 
             alt: 'Original Gradient image',
-            width: '300px'
+            width: '200px'
         },
         {
             src: '/dither_blog_img_7_6.png', 
             alt: 'Quantized Gradient Image with 10 color values',
-            width: '300px'
+            width: '200px'
         },
         {
             src: '/dither_blog_img_7_7.png', 
             alt: 'Dithered Gradient Image with 10 color values',
-            width: '300px'
+            width: '200px'
         }
     ]} 
 >
@@ -72,6 +69,8 @@ The first image above uses actual gray shades while the dithered image, which al
 </ImagesWithCaption>
 
 Simply quantizing or mapping pixels to smaller set of colors can create unsmooth bands (middle image above), applying dither smooths it out using the same limited set of colors (right-side image)
+
+After some initial exploration, I started playing around by implementing a basic version of some algorithms on codepen.io and thus began my journey of understanding some of them and building <a href="https://ditherplay.vercel.app" target="_blank">Ditherplay</a> (you can check it out after reading this blog).
 
 ### Some Common Dithering Algos and how they work
 Let's now explore how some of these algorithms work, it's also helpful if you want to implement them yourself.
@@ -90,7 +89,7 @@ Here, we first quantize the colors and round them to the closest value. Then we 
         {
             src: '/dithering_blog_img_2_3.png', 
             alt: 'the FS diffusion coefficients',
-            width: '480px'
+            width: '320px'
         }
     ]} 
 >
@@ -101,21 +100,12 @@ Here, we first quantize the colors and round them to the closest value. Then we 
 
 -> let's say we have a pixel value in RGB format with <code>R value = 207</code> and we round it to <code>255</code>, so the quant error is <code>255 - 207 = 48</code>. 
 
-<blockquote class="small-note"> We can decide what value to round off to and how many color values we want, for e.g. if we wanted n = 4 values in our dithered image - <code>0,  85, 170, 255</code>. In this case, a value of <code>207</code> will be rounded off to the closest one i.e. <code>170</code>. </blockquote>
-
 -> now according to the coefficients shown previously, the pixel to the right will be transformed to <code> newValue = oldValue + error * 7/16</code>, if the value of that pixel was <code>150</code>, it will change to <code>150 + 48 * 7/16 = 171</code>.
 
 In short, for every pixel: 
 1. round off value to <code>closestValue</code>.
 2. calculate <code>error = closestValue - value</code>.
 3. for each of the neighbours, <code>newValue = oldValue + error * itsCorrespondingFraction</code>.
-
-<blockquote class="small-note"> Note: <code>RGB values range from 0 to 255</code>. In grayscale images, a pixel's R, G and B values are all the same, so (207, 207, 207) will convert to (255, 255, 255) which is also grayscale. <br/>
-It means for <code>n = 2</code> possible values, <code>0 and 255</code>: <br/>
-For a grayscale image -> 2 (or n) possible outputs i.e. (0, 0, 0) or (255, 255, 255). <br/>
-For a non-grayscale image -> more than 2 (or n) possible outputs e.g. (255, 255, 0), (255, 0, 255), (0, 255, 0), (255, 255, 255) and so on. </blockquote>
-
-<blockquote class="small-note">Also, note that whenever I mention "value" I am referring to one of R/G/B values, which is also referred to as *brightness*.</blockquote>
 
 <ImagesWithCaption 
     images={[
@@ -125,21 +115,30 @@ For a non-grayscale image -> more than 2 (or n) possible outputs e.g. (255, 255,
             width: '360px'
         },
         {
-            src: '/dither_blog_img_dithered_floyd_2.png', 
+            src: '/dither_blog_img_dithered_floyd_4.png', 
             alt: 'Original Colors and Dithered with Floyd-Steinberg',
             width: '360px'
         },
         {
-            src: '/dither_blog_img_dithered_floyd_1.png', 
+            src: '/dither_blog_img_dithered_floyd_3.png', 
             alt: 'Grayscaled and Dithered with Floyd-Steinberg',
             width: '360px'
         }        
     ]} 
 >
     <p slot="caption">
-    Original Image (first). Dithered with Floyd-Steinberg(second), and Grayscaled + Dithered with Floyd-Steinberg (third).
+    Original Image from <a href="https://unsplash.com/photos/a-woman-poses-with-a-designer-handbag-PN19hB7_lHE?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" target="_blank">Unsplash</a> (first). Dithered with Floyd-Steinberg(second), and Grayscaled + Dithered with Floyd-Steinberg (third).
     </p>
 </ImagesWithCaption>
+
+<blockquote class="small-note"> We can decide what value to round off to and how many color values we want during quantizing, for e.g. if we wanted n = 4 values in our dithered image - <code>0,  85, 170, 255</code>. In this case, a value of <code>207</code> will be rounded off to the closest one i.e. <code>170</code>. </blockquote>
+
+<blockquote class="small-note"> Note: <code>RGB values range from 0 to 255</code>. In grayscale images, a pixel's R, G and B values are all the same, so (207, 207, 207) will convert to (255, 255, 255) which is also grayscale. <br/>
+It means for <code>n = 2</code> possible values, <code>0 and 255</code>: <br/>
+For a grayscale image -> 2 (or n) possible outputs i.e. (0, 0, 0) or (255, 255, 255). <br/>
+For a non-grayscale image -> more than 2 (or n) possible outputs e.g. (255, 255, 0), (255, 0, 255), (0, 255, 0), (255, 255, 255) and so on. </blockquote>
+
+<blockquote class="small-note">Also, note that whenever I mention "value" I am referring to one of R/G/B values, which is also referred to as *brightness*.</blockquote>
 
 ##### Atkinson Algorithm
 Atkinson dithering is a variant of Floyd–Steinberg dithering designed by Bill Atkinson at Apple Computer, and used in the original Macintosh computer. 
@@ -150,7 +149,7 @@ It pushes the quant error to neighbouring <code>six</code> pixels like shown bel
         {
             src: '/dither_blog_img_8_2.png', 
             alt: 'the Atkinson diffusion coefficients',
-            width: '480px'
+            width: '320px'
         }
     ]} 
 >
@@ -169,12 +168,12 @@ Unlike Floyd–Steinberg dithering, only 3⁄4 of the error is diffused outward.
             width: '360px'
         },
         {
-            src: '/dither_blog_img_dithered_atkinson_2.png', 
+            src: '/dither_blog_img_dithered_atkinson_4.png', 
             alt: 'Original Colors and Dithered with Atkinson Algorithm',
             width: '360px'
         },
         {
-            src: '/dither_blog_img_dithered_atkinson_1.png', 
+            src: '/dither_blog_img_dithered_atkinson_3.png', 
             alt: 'Grayscaled and Dithered with Atkinson Algorithm',
             width: '360px'
         }        
@@ -185,15 +184,15 @@ Unlike Floyd–Steinberg dithering, only 3⁄4 of the error is diffused outward.
     </p>
 </ImagesWithCaption>
 
+As you can see in the above images, the output looks more uniform and cleaner as compared to Floyd-Steinberg.
+
 #### Non-Error Diffusion Algorithms
 One of the main type of algorithms here are *ordered* algorithms.
-You apply a fixed, repeating pattern (an “order”) to decide how to threshold each pixel. Here, we usually have just *two* colors (two each for R,G, and B) and round off the pixels based on if it's greater or smaller than a dynamic threshold. Examples:
+We apply a fixed, repeating pattern (an “order”) to decide how to threshold each pixel. We round off the pixel values based on if it's greater or smaller than a dynamic threshold. Some Examples:
 
 ##### Bayer Ordered Algorithm
 Ordered algorithms usually utilize a threshold matrix to create a repeating pixelated, grid-like patterns.
 Think of it as starting with a matrix of values and repeating it across the entire image, like floor tiles.
-
---- maybe an image ---
 
 <code class="code-block">
 ```
@@ -214,11 +213,20 @@ const thresholdMat = [
 
 -> Once we get the value, we <code>divide by N*N</code> to get a value between 0 and 1 and <code>multiply it with 255</code>. 
 
----- formula image with mention of + 0.5 ----
+<ImagesWithCaption 
+    images={[
+        {
+            src: '/dither_blog_img_10_2.png', 
+            alt: 'Threshold formula',
+            width: '600px'
+        }
+    ]} 
+>
+</ImagesWithCaption>
 
 -> Now we have a *threshold* value to which we compare the original pixel value and decide to turn the pixel *on or off* 
 
--> For e.g. if the threshold is 127.5 and the pixel value is 130, we can turn it "on" (since 130 > 127.5) by setting it to a value like 255. Thus, ordered dithering usually only has two output color values unlike error diffusion algorithms.
+-> For e.g. if the threshold is 127.5 and the pixel value is 130, we can turn it "on" (since 130 > 127.5) by setting it to a value like 255.
 
 <ImagesWithCaption 
     images={[
@@ -249,23 +257,41 @@ This algorithm doesn't use a matrix, but can still be termed as an ordered algor
 
 -> To create a basic halftone effect, we can take a grid or cell of size N similar to Bayer, but instead of comparing pixels to some matrix, we just convert it to grayscale and take it's value (or brightness).
 
--> For the current cell of N x N pixels, we take the average of those N*N values in a cell to get the average brightness of the cell.
+-> We take the average brightness of the cell, which will decide the size of the black dot at the center of the cell. Brighter the cell, smaller the circle.
 
--> we then calculate the radius of the dot/circle to create using <br/>
-   <code>radius = ((255 - avg) / 255) * cellRadius</code>.
+-> Since we considered a grayscale version of the image here, the resulting image will always be just black and white.
 
--> Now, for each pixel outside of this radius w.r.t. the center of the cell, we turn it off, or make it 255 i.e. white, else black i.e. 0.
+<ImagesWithCaption 
+    images={[
+        {
+            src: '/dither_blog_img_base_2.jpg', 
+            alt: 'Original Image',
+            width: '360px'
+        },
+        {
+            src: '/dither_blog_img_dithered_halftone_1.png', 
+            alt: 'Dithered with Halftone ',
+            width: '360px'
+        },        
+        {
+            src: '/dither_blog_img_dithered_halftone_2.png', 
+            alt: 'Dithered with Halftone, Quality Lowered ',
+            width: '360px'
+        }        
+    ]} 
+>
+    <p slot="caption">
+    Original Image (first). Dithered with Halftone (second) and Dithered with halftone + lowered quality (third).
+    </p>
+</ImagesWithCaption>
 
--> the end result is a black circle at the center of the cell. The resulting image will be made of such circles of different sizes. 
+There are more methdods like threshold and random dithering, and plenty more interesting algorithms out there, which I encourage you to poke around yourself.
 
----- original image and image showing example of Halftone algo ----
+You can check out <a href="https://ditherplay.vercel.app" target="_blank">Ditherplay</a>, a project I had initially built for fun, to help apply Dithering effects along with a ton of Controls.
 
-more obscure ones
+### Conclusion
 
-blah blah...
+Dithering is a smart way to make images look better when you have limited colors. Instead of showing harsh steps between shades, it adds patterns that trick our eyes into seeing smooth detail. 
 
-After some initial exploration, I started playing around by implementing a basic version of Floyd-Steinberg and Atkinson algos on codepen.io and thus began my journey of understanding some of them and building <a href="https://ditherplay.vercel.app" target="_blank">Ditherplay</a>
-
-
-blah blah...
+I highly recommend you to explore Dithering more and just play around, you might be surprised by how much personality a few pixels can add.
 

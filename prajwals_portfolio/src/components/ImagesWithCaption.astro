@@ -1,6 +1,5 @@
 ---
 import type { JSX } from "astro/jsx-runtime";
-import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 
 interface ImageItem {
   src: string;
@@ -23,8 +22,6 @@ const { images = [], caption = "" } = Astro.props as {
     }
 
     .image-grid img {
-        /* width: clamp(120px, 20vw, 320px); */
-        /* max-width: 100%; */
         width: 360px;
     }
 
@@ -40,10 +37,10 @@ const { images = [], caption = "" } = Astro.props as {
     }
 
     .caption {
-        max-width: 600px;
+        width: min(690px, 100%);
         text-align: center;
-        font-size: 0.9rem;
-        margin: 1em auto 2.5em auto;
+        font-size: 0.75rem;
+        margin: 0 auto 2.5em auto;
         color: #949494;
     }
 </style>
@@ -54,8 +51,7 @@ const { images = [], caption = "" } = Astro.props as {
             <img src={image.src} alt={image.alt || `Image ${index + 1}`} style={image.width ? `width: ${image.width}` : ""}/>
         ))}
     </div>
-    <!-- <p class="caption">{caption}</p> -->
     <figcaption class="caption">
         <slot name="caption" />
-      </figcaption>
+    </figcaption>
 </div>
