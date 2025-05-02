@@ -5,17 +5,19 @@ const today = new Date();
 <p class="copy">
     <div class="social-links"> 
         <span>&copy; {today.getFullYear()} <a href="http://localhost:4321/blog">Prajwal's Blog</a></span>
-        ·
-        <a href="https://x.com/prajwaldhule36" target="_blank">
-            X / Twitter
-        </a>
-        <a href="https://linkedin.com/in/prajwal-dhule" target="_blank">
-            Linkedin
-        </a>
-        <a href="https://github.com/PrajwalDhule" target="_blank">
-            Github
-        </a>
-        · 
+        <span class="dot">·</span>
+        <span>
+            <a href="https://x.com/prajwaldhule36" target="_blank">
+                X / Twitter
+            </a>
+            <a href="https://linkedin.com/in/prajwal-dhule" target="_blank">
+                Linkedin
+            </a>
+            <a href="https://github.com/PrajwalDhule" target="_blank">
+                Github
+            </a>
+        </span>
+        <span class="dot">·</span>
         <span>hello.prajwal247@gmail.com</span>
     </div>
 </p>
@@ -37,5 +39,19 @@ const today = new Date();
     }
     .social-links a:hover {
         color: rgb(var(--gray-light));
+    }
+    span > a + a{
+        margin-left: 1em;
+    }
+    @media screen and (max-width: 720px) {
+        .social-links {
+            flex-direction: column;
+            gap: -0.5em;
+            align-items: center;
+            justify-content: center;
+        }
+        .dot{
+            display: none;
+        }
     }
 </style>

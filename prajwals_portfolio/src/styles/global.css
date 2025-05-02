@@ -90,6 +90,9 @@ b {
 a {
 	color: var(--white);
 }
+a:hover{
+	cursor: pointer;
+}
 p {
 	margin-bottom: 1em;
 }
@@ -100,13 +103,16 @@ p {
 .prose > h5,
 .prose > h6,
 .prose > p,
-.prose > ul,
-.prose > ol,
 .prose > code.code-block,
 .prose > div:not(:has(.image-grid)),
-.prose > blockquote{
-	/* width: 60%; */
+.prose > hr{
 	width: min(720px, 100%);
+	margin-inline: auto;
+}
+.prose > ul,
+.prose > ol,
+.prose > blockquote{
+	width: min(720px, 90%);
 	margin-inline: auto;
 }
 .prose p {
@@ -170,12 +176,12 @@ code.code-block {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	border-radius: 8px;
+	box-sizing: border-box;
 }
 code.code-block pre span{ 
 	font-size: .85rem;
 }
 pre {
-	/* padding: 1.5em; */
 	border-radius: 8px;
 }
 pre > code {
@@ -197,8 +203,12 @@ hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-dark));
 }
-footer{
+footer{	
 	margin-block: auto 3em;
+	box-sizing: border-box;
+}
+main{
+	box-sizing: border-box;
 }
 
 .sr-only {

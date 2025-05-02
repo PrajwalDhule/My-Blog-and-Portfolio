@@ -2,7 +2,7 @@
 title: "The Art of Image Dithering - A Unique Visual Effect Worth Trying Out"
 description: ''
 pubDate: 'May 2 2025'
-heroImage: '/dither_blog_thumbnail_6.png'
+heroImage: '/dither_blog_thumbnail_8.png'
 ---
 import ImagesWithCaption from '../../components/ImagesWithCaption.astro';
 
@@ -29,16 +29,18 @@ Comic books and other color printing worked similarly, but to simulate more shad
     images={[
         {
             src: '/dither_blog_img_9_2.png', 
-            alt: 'Grayscaled image'
+            alt: 'Grayscaled image',
+            width: "360px"
         },
         {
             src: '/dither_blog_img_9_1.png', 
-            alt: 'Dithered image simulating grayscale with black and white pixels'
+            alt: 'Dithered image simulating grayscale with black and white pixels',
+            width: "360px"
         }
     ]} 
 >
     <p slot="caption">
-        Original Grayscale Image from <a href="https://www.pexels.com/photo/close-up-photography-of-sleeping-tabby-cat-1056251/" target="_blank">Pexels</a> (first), Dithered image (second) simulating grayscale with black & white pixels.
+        Original Image from <a href="https://www.pexels.com/photo/close-up-photography-of-sleeping-tabby-cat-1056251/" target="_blank">Pexels</a> Grayscaled (first), Dithered image (second) simulating grayscale with black & white pixels.
     </p>
 </ImagesWithCaption>
 
@@ -294,4 +296,6 @@ You can check out <a href="https://ditherplay.vercel.app" target="_blank">Dither
 Dithering is a smart way to make images look better when you have limited colors. Instead of showing harsh steps between shades, it adds patterns that trick our eyes into seeing smooth detail. 
 
 I highly recommend you to explore Dithering more and just play around, you might be surprised by how much personality a few pixels can add.
+
+<hr/>
 
